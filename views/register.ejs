@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Page Title</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+
+    <!-- Custom CSS (optional) -->
+    <style>
+      /* Add your custom styles here */
+
+      .registeruser {
+        padding-top: 200px;
+      }
+
+      .form-group {
+        width: 300px;
+        margin: 0 auto;
+      }
+      .registerbtn {
+        position: relative;
+        left: 700px;
+        top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Add your content here -->
+    <form id="register-form">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          class="form-control"
+          id="name-input"
+          name="name"
+          placeholder="Enter your Name"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          class="form-control"
+          id="email"
+          name="email"
+          placeholder="Enter your Email"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          class="form-control"
+          id="password"
+          name="password"
+          placeholder="Enter your Password"
+          required
+        />
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary registerbtn"
+        id="register-button"
+      >
+        Register
+      </button>
+    </form>
+
+    <!-- Bootstrap JavaScript -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <!-- <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI"
+    ></script> -->
+    <script>
+      // Get the login button and email/password input elements
+      const registerButton = document.querySelector("#register-button");
+      const emailInput = document.querySelector("#email");
+      const passwordInput = document.querySelector("#password");
+      const nameInput = document.querySelector("#name-input");
+
+      // Add a click event listener to the login button
+      registerButton.addEventListener("click", (e) => {
+        // Get the email and password values entered by the user
+        e.preventDefault();
+        const name = nameInput.value;
+        const email = emailInput.value;
+        const password = passwordInput.value;
+
+        const data = { name, email, password };
+        console.log(data);
+        // Send a request to the server to log the user in (assuming you have an API for this)
+        fetch(`/api/register`, {
+          method: "POST",
+          body: JSON.stringify(data),
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+          .then((response) => {
+            // Check the response status and display an error message if necessary
+            window.location.href = "/login";
+          })
+          .catch((err) => console.log(err));
+      });
+    </script>
+  </body>
+</html>

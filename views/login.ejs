@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- Page content goes here -->
+    <section class="login">
+      <form id="login-form">
+        <div class="form-group">
+          <label for="email-input">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email-input"
+            placeholder="Enter your email"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password-input">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password-input"
+            placeholder="Enter your password"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary" id="login-button">
+          Log In
+        </button>
+      </form>
+    </section>
+    <style>
+      .login {
+        text-align: center;
+        padding-top: 300px;
+      }
+      #login-form {
+        width: 300px;
+        margin: 0 auto;
+      }
+    </style>
+    <script>
+      // Get the login button and email/password input elements
+      const loginButton = document.querySelector("#login-button");
+      const emailInput = document.querySelector("#email-input");
+      const passwordInput = document.querySelector("#password-input");
+
+      // Add a click event listener to the login button
+      loginButton.addEventListener("click", () => {
+        // Get the email and password values entered by the user
+        const email = emailInput.value;
+        const password = passwordInput.value;
+        console.log(email, password);
+
+        // Validate the email and password (e.g. check if they are not empty)
+        if (email.length === 0 || password.length === 0) {
+          alert("Please enter your email and password.");
+          return;
+        }
+        const data = { email, password };
+        // const url = "http:localhost:3000/api";
+        // Send a request to the server to log the user in (assuming you have an API for this)
+        fetch(`/api/login`, {
+          method: "POST",
+          body: JSON.stringify(data),
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            'Content-Type': 'application/json',
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        })
+          .then((response) => {
+            // Check the response status and display an error message if necessary
+            if (response.status !== 200) {
+              alert("Invalid email or password. Please try again.");
+              return;
+            }
+
+            // Redirect the user to the dashboard or home page if the login is successful
+            window.location.href = "/account";
+          })
+          .catch((err) => console.log(err));
+      });
+    </script>
+  </body>
+</html>
