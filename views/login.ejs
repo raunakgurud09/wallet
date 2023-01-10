@@ -53,8 +53,9 @@
       const passwordInput = document.querySelector("#password-input");
 
       // Add a click event listener to the login button
-      loginButton.addEventListener("click", () => {
+      loginButton.addEventListener("click", (e) => {
         // Get the email and password values entered by the user
+        e.preventDefault()
         const email = emailInput.value;
         const password = passwordInput.value;
         console.log(email, password);
