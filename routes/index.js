@@ -14,6 +14,10 @@ router.get("/register", (req, res) => {
   return res.render("register.ejs");
 });
 
+router.get('/qrcode',(req,res)=>{
+  return res.render("code.ejs")
+})
+
 router.get("/login", (req, res) => {
   return res.render("login.ejs");
 });
