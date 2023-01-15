@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <!-- <link rel="stylesheet" href="css/custom.css" /> -->
+  </head>
+  <body>
+    <!-- Page content goes here -->
+    <div class="container">
+      <div>
+        <div class="row">
+          <div class="col-md-4 offset-md-4">
+            <form>
+              <div class="form-group">
+                <label for="amount">Enter amount to load:</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="amount"
+                  placeholder="Enter the amount"
+                />
+              </div>
+              <button type="submit" class="btn btn-primary" id="load-btn">
+                Load
+              </button>
+              <div id="paypal-button-container"></div>
+            </form>
+            <a href="/view">
+              <button class="btn btn-secondary">Profile</button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      .container {
+        padding-top: 200px;
+      }
+      .walletbalance {
+        width: 900px;
+        padding-left: 500px;
+      }
+      .status {
+        display: block;
+        padding-left: 600px;
+      }
+      form {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 30px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      input {
+        width: 100%;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      button {
+        width: 100%;
+        background-color: #4caf50;
+        color: white;
+        padding: 14px 20px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+
+    <script>
+      const inputBtn = document.querySelector("#amount");
+      const amountBtn = document.querySelector("#load-btn");
+
+      amountBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        const login = "rzp_test_5M1oVA8XpHMeng";
+        const password = "PYEQd1W8sYiXrcfDcSxYfUML";
+
+        // const data = {
+        //   account_number: "2323230091936182",
+        //   amount: `${inputBtn.value * 100}`,
+        //   currency: "INR",
+        //   mode: "UPI",
+        //   purpose: "refund",
+        //   fund_account: {
+        //     account_type: "vpa",
+        //     vpa: {
+        //       address: "9022688778@ybl",
+        //     },
+        //     contact: {
+        //       name: "Raunak Gurud",
+        //       email: "raunak2002@gmail.com",
+        //       contact: "9876543210",
+        //       type: "self",
+        //       reference_id: "Acme Contact ID 12345",
+        //     },
+        //   },
+        //   queue_if_low_balance: true,
+        //   reference_id: "Acme Transaction ID 12345",
+        //   narration: "Acme Corp Fund Transfer",
+        // };
+
+        async function fetchUser() {
+          const response = await fetch("/api/profile", {
+            method: "GET",
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          const data = await response.json();
+          return data;
+        }
+
+        async function value() {
+          const user = await fetchUser();
+
+          if (inputBtn.value > user.balance) {
+            return alert("insufficient balance");
+          }
+          console.log(login, password);
+          const result = await fetch(
+            "https://api.razorpay.com/v1/payouts?account_number=2323230091936182",
+            {
+              method: "GET",
+              mode: "no-cors", // no-cors, *cors, same-origin
+              cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Basic` + `${btoa(`${login}:${password}`)}`,
+              },
+            }
+          )
+            .then((request) => {
+              console.log(request);
+              return request.json();
+            })
+            .catch((e) => console.log(e));
+        }
+
+        value();
+      });
+    </script>
+  </body>
+</html>

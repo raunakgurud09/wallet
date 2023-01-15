@@ -14,9 +14,9 @@ router.get("/register", (req, res) => {
   return res.render("register.ejs");
 });
 
-router.get('/qrcode',(req,res)=>{
-  return res.render("code.ejs")
-})
+router.get("/qrcode", (req, res) => {
+  return res.render("code.ejs");
+});
 
 router.get("/login", (req, res) => {
   return res.render("login.ejs");
@@ -25,8 +25,13 @@ router.get("/login", (req, res) => {
 router.get("/menu", (req, res) => {
   return res.render("menu.ejs");
 });
+
 router.get("/account", (req, res) => {
   return res.render("account.ejs");
+});
+
+router.get("/payout", (req, res) => {
+  return res.render("payout.ejs");
 });
 
 module.exports = router;
