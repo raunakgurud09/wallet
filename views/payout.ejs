@@ -25,9 +25,23 @@
                   id="amount"
                   placeholder="Enter the amount"
                 />
+                <label for="UPI">Enter your UPI id:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="UPIAddress"
+                  placeholder="Enter the amount"
+                />
+                <label for="number">Enter your number:</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="contact"
+                  placeholder="Enter the amount"
+                />
               </div>
               <button type="submit" class="btn btn-primary" id="load-btn">
-                Load
+                Payout
               </button>
               <div id="paypal-button-container"></div>
             </form>
@@ -93,38 +107,19 @@
     </style>
 
     <script>
+      // var base64 = require("base-64");
+
       const inputBtn = document.querySelector("#amount");
+      const UPIAddress = document.querySelector("#UPIAddress");
+      const contact = document.querySelector("#contact");
+
       const amountBtn = document.querySelector("#load-btn");
 
       amountBtn.addEventListener("click", (e) => {
         e.preventDefault();
 
-        const login = "rzp_test_5M1oVA8XpHMeng";
-        const password = "PYEQd1W8sYiXrcfDcSxYfUML";
-
-        // const data = {
-        //   account_number: "2323230091936182",
-        //   amount: `${inputBtn.value * 100}`,
-        //   currency: "INR",
-        //   mode: "UPI",
-        //   purpose: "refund",
-        //   fund_account: {
-        //     account_type: "vpa",
-        //     vpa: {
-        //       address: "9022688778@ybl",
-        //     },
-        //     contact: {
-        //       name: "Raunak Gurud",
-        //       email: "raunak2002@gmail.com",
-        //       contact: "9876543210",
-        //       type: "self",
-        //       reference_id: "Acme Contact ID 12345",
-        //     },
-        //   },
-        //   queue_if_low_balance: true,
-        //   reference_id: "Acme Transaction ID 12345",
-        //   narration: "Acme Corp Fund Transfer",
-        // };
+        const login = "rzp_test_n97PNyqfl3KmEH";
+        const password = "fhsT9qFyBBC98SD5lNpIzQLd";
 
         async function fetchUser() {
           const response = await fetch("/api/profile", {
@@ -140,32 +135,64 @@
           return data;
         }
 
+        const data = {
+          account_number: "2323230091936182",
+          amount: inputBtn.value * 100,
+          currency: "INR",
+          mode: "UPI",
+          purpose: "refund",
+          fund_account: {
+            account_type: "vpa",
+            vpa: {
+              address: `${UPIAddress.value}`,
+            },
+            contact: {
+              name: "Raunak Gurud",
+              email: "raunak2002@gmail.com",
+              contact: `${contact.value}`,
+              type: "self",
+              reference_id: "Acme Contact ID 12345",
+            },
+          },
+          queue_if_low_balance: true,
+          reference_id: "Acme Transaction ID 12345",
+          narration: "Acme Corp Fund Transfer",
+        };
+
         async function value() {
           const user = await fetchUser();
 
           if (inputBtn.value > user.balance) {
             return alert("insufficient balance");
           }
-          console.log(login, password);
-          const result = await fetch(
-            "https://api.razorpay.com/v1/payouts?account_number=2323230091936182",
-            {
-              method: "GET",
-              mode: "no-cors", // no-cors, *cors, same-origin
-              cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Basic` + `${btoa(`${login}:${password}`)}`,
-              },
-            }
-          )
-            .then((request) => {
-              console.log(request);
-              return request.json();
-            })
-            .catch((e) => console.log(e));
-        }
 
+          
+          // const response = await
+          // const result = await response.json();
+          // console.log(result);
+          // return result;
+        }
+        
+        const token = btoa(`${login}:${password}`);
+        fetch("https://api.razorpay.com/v1/payouts", {
+          method: "POST",
+          body: JSON.stringify(data),
+          mode: "no-cors", // no-cors, *cors, same-origin
+          cache: "no-cache",
+          credentials: "include", // *default, no-cache, reload, force-cache, only-if-cached
+          headers: {
+            Authorization: `Basic ${token}`,
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((e) => console.log(e));
+        // .then((response) => {
+        //   console.log(response);
+        //   // response.json();
+        // })
+        // .catch((e) => console.log(e));
         value();
       });
     </script>
