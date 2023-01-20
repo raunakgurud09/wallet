@@ -32,10 +32,10 @@
         .then((response) => response.json())
         .then((data) => {
           result.innerHTML = `<div>
-            <p>ACCOUNT ID: ${data.id}</p>
-            <p>NAME:${data.name}</p>
-            <p> EMAIL: ${data.email}</p>
-            <p> BALANCE: ${data.balance}</p>
+            <p>${data.id}</p>
+            <p>${data.name}</p>
+            <p>${data.email}</p>
+            <p>${data.balance}</p>
             </div>`;
         });
     </script>
