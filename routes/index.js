@@ -34,4 +34,8 @@ router.get("/payout", (req, res) => {
   return res.render("payout.ejs");
 });
 
+router.get("/razorpay", (req, res) => {
+  return res.render("razorPay.ejs");
+});
+
 module.exports = router;

@@ -9,7 +9,8 @@ const MongoStore = require("connect-mongo")(session);
 const cookieParser = require("cookie-parser");
 
 const MongoDBURI =
-  process.env.MONGO_URI || "mongodb://localhost:27017/wallet-paypal";
+  process.env.MONGO_URI ||
+  "mongodb+srv://raunak09:raunak09@cluster0.fl4iz.mongodb.net/wallet-gunesh?retryWrites=true&w=majority";
 
 mongoose.set("strictQuery", false);
 mongoose.connect(MongoDBURI, {

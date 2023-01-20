@@ -100,6 +100,7 @@ const load = async (req, res) => {
 
 module.exports = {
   register,
+ 
   login,
   logout,
   profile,
