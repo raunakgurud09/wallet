@@ -4,8 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
   <body>
-    <div id="result"></div>
-    <button id="logout" class="btn btn-primary">Log out</button>
+    <div  class="profile "id="result">
+ 
+
+
+    </div>
+    <style>
+      .profile{
+           text-align: center;
+           display: flexbox;
+      }
+    </style>
+    <button id="logout" class="btn btn-primary" class="profile">Log out</button>
     <!-- Replace "test" with your own sandbox Business account app client ID -->
     <script>
       const result = document.getElementById("result");
@@ -22,7 +32,7 @@
         .then((response) => response.json())
         .then((data) => {
           result.innerHTML = `<div>
-            <p>${data._id}</p>
+            <p>${data.id}</p>
             <p>${data.name}</p>
             <p>${data.email}</p>
             <p>${data.balance}</p>
