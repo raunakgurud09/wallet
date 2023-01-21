@@ -17,7 +17,13 @@
         <div class="row">
           <div class="col-md-4 offset-md-4">
             <div>
-              <img src="https://sugermint.com/wp-content/uploads/2022/01/Razorpay-Startup-Story.jpg" class="RazorPay_Id"  width="350" height="150" alt="RazorPay_Image"/>
+              <img
+                src="https://sugermint.com/wp-content/uploads/2022/01/Razorpay-Startup-Story.jpg"
+                class="RazorPay_Id"
+                width="350"
+                height="150"
+                alt="RazorPay_Image"
+              />
             </div>
             <form>
               <div class="form-group">
@@ -32,7 +38,6 @@
               <button type="submit" class="btn RazorPay_Btn" id="load-btn">
                 Razor Pay
               </button>
-             
             </form>
             <a href="/view">
               <button class="btn btn-secondary">Profile</button>
@@ -60,11 +65,9 @@
     <!-- RazorPay Checkout  -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-
     <style>
       .container {
         padding-top: 70px;
-     
       }
       .walletbalance {
         width: 900px;
@@ -94,7 +97,7 @@
         border-radius: 4px;
       }
 
-      .RazorPay_Btn{
+      .RazorPay_Btn {
         width: 100%;
         background-color: rgba(17, 28, 86);
         color: white;
@@ -113,12 +116,12 @@
         cursor: pointer;
       }
 
-      .RazorPay_Id{
+      .RazorPay_Id {
         border-radius: 40px;
         box-shadow: 0 3px 10px rgba(17, 28, 86, 0.6);
         transition: 0.4s linear;
       }
-      .RazorPay_Id:hover{
+      .RazorPay_Id:hover {
         scale: 1.1;
       }
       button:hover {
@@ -127,69 +130,62 @@
     </style>
 
     <script>
-
       let amountInputed = document.querySelector("#amount");
       let PayBtn = document.querySelector("#load-btn");
-      var orderId ;
+      var orderId;
 
       var options = {
-        key: "rzp_test_6y2wFZUor8W1rB", // Enter the Key ID generated from the Dashboard
+        key: "rzp_test_n97PNyqfl3KmEH", // Enter the Key ID generated from the Dashboard
         amount: 1000, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-       currency: "INR",
+        currency: "INR",
         name: " RazorPay Wallet",
         description: "Test Transaction",
         image: "https://d6xcmfyh68wv8.cloudfront.net/assets/razorpay-glyph.svg",
         order_id: "order_L6B5aZCT6rIozo", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-       handler: function (response){
-        // console.log(response.razorpay_payment_id);
-        // console.log(response.razorpay_order_id);
-        // console.log(response.razorpay_signature);
+        handler: function (response) {
 
-        const data = {
-          razorpay_payment_id : response.razorpay_payment_id,
-          razorpay_order_id : response.razorpay_order_id,
-          razorpay_signature : response.razorpay_signature
-        }
+          const data = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          };
 
-        fetch(`/api/razorpay/verifyorder`, {
-          method: "POST",
-          body: JSON.stringify(data),
-          mode: "cors", // no-cors, *cors, same-origin
-          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: "same-origin", // include, *same-origin, omit
-          headers: {
-            'Content-Type': 'application/json',
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
-          .then((response) => {
-            // Check the response status and display an error message if necessary
-           return response.json()
-         
-          }).then(data => {
-          alert(data.message);
-          amountInputed.value="";
+          fetch(`/api/razorpay/verifyorder`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+              "Content-Type": "application/json",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+            .then((response) => {
+              // Check the response status and display an error message if necessary
+              return response.json();
+            })
+            .then((data) => {
+              alert(data.message);
+              amountInputed.value = "";
+            })
+            .catch((err) => alert(error));
+        },
 
-           })
-          .catch((err) => alert(error));
-       },
-       
-       theme: {
-        color: "#007bff"
-       }
-
-  }
-
+        theme: {
+          color: "#007bff",
+        },
+      };
 
       PayBtn.addEventListener("click", (e) => {
         console.log(amountInputed.value);
         let amount = amountInputed.value;
         // console.log(typeof(amount));
         // api call to get orderId From Server
-           let data = {
-                amount: amount
-                }
-                // console.log(data);
+        let data = {
+          amount: amount,
+        };
+        // console.log(data);
 
         fetch(`/api/razorpay/neworder`, {
           method: "POST",
@@ -198,38 +194,30 @@
           cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
           credentials: "same-origin", // include, *same-origin, omit
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             // 'Content-Type': 'application/x-www-form-urlencoded',
           },
         })
           .then((response) => {
             // Check the response status and display an error message if necessary
-           return response.json()
-         
-
-          }).then(data => {
-
+            return response.json();
+          })
+          .then((data) => {
             // console.log(data.order_id , data.razorpayKeyId )
-              options.amount= amount;
-              options.order_id = data.order_id;
-              options.key = data.razorpayKeyId;
-            //  console.log("sahil",options);
-
-             var rzp1 = new Razorpay(options);
-           rzp1.on('payment.failed', function (response){
-             alert("Payment Failed")
-      });
-      //  console.log("aaye");
-       rzp1.open();
-
-
-           })
+            options.amount = amount;
+            options.order_id = data.order_id;
+            options.key = data.razorpayKeyId;
+            
+            var rzp1 = new Razorpay(options);
+            rzp1.on("payment.failed", function (response) {
+              alert("Payment Failed");
+            });
+            //  console.log("aaye");
+            rzp1.open();
+          })
           .catch((err) => alert(err));
         e.preventDefault();
       });
-
-      
-  
     </script>
   </body>
 </html>

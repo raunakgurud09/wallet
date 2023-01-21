@@ -26,7 +26,11 @@
                   placeholder="Enter the amount"
                 />
               </div>
-              <button type="submit" class="btn btn-primary invisible d-none" id="load-btn">
+              <button
+                type="submit"
+                class="btn btn-primary invisible d-none"
+                id="load-btn"
+              >
                 Load
               </button>
               <div id="paypal-button-container"></div>
@@ -120,7 +124,13 @@
           // Order is created on the server and the order id is returned
           createOrder: (data, actions) => {
             return actions.order.create({
-              purchase_units: [{ amount: { value: inputBtn.value } }],
+              purchase_units: [
+                {
+                  amount: {
+                    value: inputBtn.value > 125 ? 125 : inputBtn.value,
+                  },
+                },
+              ],
             });
           },
           // Finalize the transaction on the server after payer approval
