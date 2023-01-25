@@ -37,6 +37,7 @@ const createOrderRazorPay = async (req, res) => {
 
       res.json({
         success: true,
+        amount: amount,
         order_id: response.id,
         receipt_id: response.receipt,
         razorpayKeyId,
