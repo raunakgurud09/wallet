@@ -27,9 +27,9 @@
                 />
               </div>
               <button type="submit" class="btn btn-primary" id="load-btn">
-                Load
+                Razorpay
               </button>
-              <button id="rzp-button1">Pay</button>
+              <!-- <button id="rzp-button1">Pay</button> -->
               <div id="paypal-button-container"></div>
             </form>
             <a href="/view">
@@ -113,37 +113,59 @@
       const inputBtn = document.querySelector("#amount");
       const amountBtn = document.querySelector("#load-btn");
 
-      const fetchOrder = async (paisa) => {
-        const data = {
-          amount: paisa,
-        };
+      var options = {
+        key: "rzp_test_NBTbbzln4v9n7H", // Enter the Key ID generated from the Dashboard
+        amount: 1000, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+        currency: "INR",
+        name: " RazorPay Wallet",
+        description: "Test Transaction",
+        image: "https://d6xcmfyh68wv8.cloudfront.net/assets/razorpay-glyph.svg",
+        order_id: "order_L6B5aZCT6rIozo", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+        handler: function (response) {
+          const data = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+          };
 
-        const res = await fetch(`/api/razorpay/neworder`, {
-          method: "POST",
-          body: JSON.stringify(data),
-          mode: "cors", // no-cors, *cors, same-origin
-          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: "same-origin", // include, *same-origin, omit
-          headers: {
-            "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        })
-          .then((t) => t.json())
-          .catch((e) => console.log(e));
-        console.log(res);
-        return res;
+          fetch(`/api/razorpay/verifyorder`, {
+            method: "POST",
+            body: JSON.stringify(data),
+            mode: "cors", // no-cors, *cors, same-origin
+            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: "same-origin", // include, *same-origin, omit
+            headers: {
+              "Content-Type": "application/json",
+              // 'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          })
+            .then((response) => {
+              // Check the response status and display an error message if necessary
+              return response.json();
+            })
+            .then((data) => {
+              alert(data.message);
+              inputBtn.value = "";
+            })
+            .catch((err) => alert(error));
+        },
+
+        theme: {
+          color: "#007bff",
+        },
       };
 
-      amountBtn.addEventListener("click", async (e) => {
-        e.preventDefault();
+      amountBtn.addEventListener("click", (e) => {
         console.log(inputBtn.value);
-
-        const data = {
-          amount: inputBtn.value,
+        let amount = inputBtn.value;
+        // console.log(typeof(amount));
+        // api call to get orderId From Server
+        let data = {
+          amount: amount,
         };
+        // console.log(data);
 
-        const result = await fetch(`/api/razorpay/neworder`, {
+        fetch(`/api/razorpay/neworder`, {
           method: "POST",
           body: JSON.stringify(data),
           mode: "cors", // no-cors, *cors, same-origin
@@ -154,66 +176,28 @@
             // 'Content-Type': 'application/x-www-form-urlencoded',
           },
         })
-          .then((t) => t.json())
-          .catch((e) => console.log(e));
-        console.log(result, "result");
-        var options = {
-          key: "rzp_test_NBTbbzln4v9n7H", // Enter the Key ID generated from the Dashboard
-          amount: "10000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-          currency: "INR",
-          order_id: "order_L85yHsezfqwlts", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-          name: "Acme Corp",
-          description: "Test Transaction",
-          image: "https://example.com/your_logo",
-          handler: function (response) {
-            const data = {
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_signature: response.razorpay_signature,
-            };
+          .then((response) => {
+            // Check the response status and display an error message if necessary
+            return response.json();
+          })
+          .then((data) => {
+            // console.log(data.order_id , data.razorpayKeyId )
+            options.amount = amount;
+            options.order_id = data.order_id;
+            options.key = data.razorpayKeyId;
 
-            fetch(`/api/razorpay/verifyorder`, {
-              method: "POST",
-              body: JSON.stringify(data),
-              mode: "cors", // no-cors, *cors, same-origin
-              cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-              credentials: "same-origin", // include, *same-origin, omit
-              headers: {
-                "Content-Type": "application/json",
-                // 'Content-Type': 'application/x-www-form-urlencoded',
-              },
-            })
-              .then((response) => {
-                // Check the response status and display an error message if necessary
-                return response.json();
-              })
-              .then((data) => {
-                alert(data.message);
-                amountBtn.value = "";
-              })
-              .catch((err) => alert(error));
-          },
-          theme: {
-            color: "#3399cc",
-          },
-        };
-        var rzp1 = new Razorpay(options);
-        rzp1.on("payment.failed", function (response) {
-          alert(response.error.code);
-          alert(response.error.description);
-          alert(response.error.source);
-          alert(response.error.step);
-          alert(response.error.reason);
-          alert(response.error.metadata.order_id);
-          alert(response.error.metadata.payment_id);
-        });
-        document.getElementById("rzp-button1").onclick = function (e) {
-          rzp1.open();
-          e.preventDefault();
-        };
+            var rzp1 = new Razorpay(options);
+            rzp1.on("payment.failed", function (response) {
+              alert("Payment Failed");
+            });
+            //  console.log("aaye");
+            rzp1.open();
+          })
+          .catch((err) => alert(err));
+        e.preventDefault();
       });
     </script>
-    <!-- <script>
+    <script>
       paypal
         .Buttons({
           // Order is created on the server and the order id is returned
@@ -247,6 +231,6 @@
           },
         })
         .render("#paypal-button-container");
-    </script> -->
+    </script>
   </body>
 </html>
