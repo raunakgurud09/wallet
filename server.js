@@ -8,9 +8,7 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const cookieParser = require("cookie-parser");
 
-const MongoDBURI =
-  process.env.MONGO_URI ||
-  "mongodb+srv://raunak09:raunak09@cluster0.fl4iz.mongodb.net/wallet-gunesh?retryWrites=true&w=majority";
+const MongoDBURI = process.env.MONGO_URI;
 
 mongoose.set("strictQuery", false);
 mongoose.connect(MongoDBURI, {
@@ -33,7 +31,6 @@ app.use(
   })
 );
 require("dotenv").config();
-
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
